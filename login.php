@@ -1,27 +1,42 @@
 <?php 
- 
-include 'koneksi.php';
- 
-error_reporting(0);
- 
+require('koneksi.php');
 session_start();
- 
-if (isset($_SESSION['username'])) {
-    header("Location: dashboard.html");
-}
- 
-if (isset($_POST['submit'])) {
-    $email = $_POST['email'];
-    $password = md5($_POST['password']);
- 
-    $sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
-    $result = mysqli_query($conn, $sql);
-    if ($result->num_rows > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $_SESSION['username'] = $row['username'];
-        header("Location: dashboard.php");
-    } else {
-        echo "<script>alert('Email atau password Anda salah. Silahkan coba lagi!')</script>";
+
+if(isset($_POST['submit'])){
+    $username = $_POST['txt_username'];
+    $password = $_POST['txt_pass'];
+
+    if(!empty(trim($username)) && !empty(trim($password))){
+        $query = "SELECT * FROM user WHERE username='$username'";
+        $result = mysqli_query($koneksi,$query);
+        $num = mysqli_num_rows($result);
+
+        while ($row = mysqli_fetch_array($result)){
+            $id_user = $row['id_user'];
+            $email = $row['user_email'];
+            $password =$row['user_password'];
+            $username = $row['user_username'];
+            $role = $row['role'];
+        }
+
+        if($num != 0){
+            if($userVal==$email && $passVal==$pass){
+                // header('Location: dashboard.php?user_fullname='.urlencode($username));
+                $_SESSION['id_user'] = $id;
+                $_SESSION['name'] = $username;
+                $_SESSION['level'] = $lvl;
+                header('Location:admin/dashboard.php');
+            }else{
+                $error = 'user atau password salah!!';
+                header('Location:login.php');
+            }
+        }else{
+            $error = 'user tidak ditemukan!!';
+            header('Location:login.php');
+        }
+    }else{
+        $error = 'Data tidak boleh kosong!!';
+        echo $error;
     }
 }
  
@@ -73,12 +88,12 @@ if (isset($_POST['submit'])) {
                                     <form class="user">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Masukkan email anda" value="<?php echo $email; ?>" required>
+                                                id="user_email" name="user_email" aria-describedby="emailHelp"
+                                                placeholder="Masukkan email anda">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password" value="<?php echo $_POST['password']; ?>" required>
+                                                id="user_password" name="user_password" placeholder="Password">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -87,7 +102,7 @@ if (isset($_POST['submit'])) {
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href="dashboard.html" class="btn btn-primary btn-user btn-block">
+                                        <a  type="submit" id="submit" name="submit" class="btn btn-primary btn-user btn-block">
                                             Login
                                         </a>
                                         <hr>

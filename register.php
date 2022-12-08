@@ -1,5 +1,16 @@
 <?php 
 	require ('koneksi.php');
+	if (isset($_POST['submit'])) {
+		$username = $_POST['txt_username'];
+		$password = $_POST['txt_password'];
+		$no_hp = $_POST['txt_nohp'];
+        $email = $_POST['txt_email'];
+        $alamat = $_POST['txt_alamat'];
+
+		$query = "INSERT INTO user (`id_user`, `username`, `password`, `no_hp`, `email`, `alamat`, `role`) VALUES ('', '$username', '$password', '$no_hp', '$email', '$alamat', 'admin')";
+		$result = mysqli_query($koneksi, $query);
+		header('location:login.php');
+	}
  ?>
 
 <!DOCTYPE html>
@@ -40,29 +51,29 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Buat Akun</h1>
                             </div>
-                            <form action="register.php" method="POST" class="register">
+                            <form action="" method="POST" class="register">
+                                <div class="form-group">
+                                        <input type="text" class="form-control form-control-user" id="txt_username" name="txt_username"
+                                            placeholder="Username">
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-user" id="txt_email" name="txt_email"
+                                        placeholder="Email">
+                                </div>
+                                <div class="form-group">
+                                    <input type="alamat" class="form-control form-control-user" id="txt_alamat" name="txt_alamat"
+                                        placeholder="Alamat">
+                                </div>
+                                <div class="form-group">
+                                    <input type="no_hp" class="form-control form-control-user" id="txt_nohp" name="txt_nohp"
+                                        placeholder="Nomor Handphone">
+                                </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="username" name="txt_username"
-                                            placeholder="Username">
+                                        <input type="password" class="form-control form-control-user"
+                                            id="txt_password" name="txt_password" placeholder="Password">
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="email" name="txt_email"
-                                        placeholder="Email" >
-                                </div>
-                                <div class="form-group">
-                                    <input type="alamat" class="form-control form-control-user" id="alamat" name="txt_alamat"
-                                        placeholder="Alamat" >
-                                </div>
-                                <div class="form-group">
-                                    <input type="no_hp" class="form-control form-control-user" id="nohp" name="txt_nohp"
-                                        placeholder="Nomor Handphone" >
-                                </div>
-                                <div class="form-group">
-                                     <input type="password" class="form-control form-control-user"
-                                            id="password" name="txt_password" placeholder="Password" >
-                                 </div>
                                 <div class="input-group">
                                 <button name="submit" class="btn">Register</button>
                             </div>
