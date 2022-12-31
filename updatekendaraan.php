@@ -3,72 +3,6 @@
 
 	include "koneksi.php";
 
-    $id = "SELECT id_unit FROM data_unit ORDER BY id_unit DESC LIMIT 1";
-        $query = mysqli_query($koneksi, $id);
-        $row = mysqli_fetch_assoc($query);
-        if ($id == null) {
-            $id = 1;
-        } else {
-            $id = $row['id_unit'] + 1;
-        }
-
-    function upload_file()
-        {
-            $namaFile   = $_FILES['gambar']['name'];
-            $ukuranFile = $_FILES['gambar']['size'];
-            $error      = $_FILES['gambar']['error'];
-            $tmpName    = $_FILES['gambar']['tmp_name'];
-
-            // check file yang diupload
-            $extensifileValid = ['jpg', 'jpeg', 'png','jfif'];
-            $extensifile      = explode('.', $namaFile);
-            $extensifile      = strtolower(end($extensifile));
-
-            // check format/extensi file
-            if (!in_array($extensifile, $extensifileValid)) {
-                // pesan gagal
-                echo "<script>
-                        alert('Format File Tidak Valid');
-                        document.location.href = 'tambahkendaraan.php';
-                    </script>";
-                die();
-            }
-
-            // check ukuran file 2 MB
-            if ($ukuranFile > 2048000) {
-                // pesan gagal
-                echo "<script>
-                        alert('Ukuran File Max 2 MB');
-                        document.location.href = 'tambah.php';
-                    </script>";
-                die();
-            }
-
-            // generate nama file baru
-            $namaFileBaru = uniqid();
-            $namaFileBaru .= '.';
-            $namaFileBaru .= $extensifile;
-
-            // pindahkan ke folder local
-            move_uploaded_file($tmpName, 'assets/img/' . $namaFileBaru);
-            return $namaFileBaru;
-        }
-    if (isset($_POST['submit'])) {
-        
-
-            $nama_kendaraan = $_POST['nama'];
-            $harga_sewa = $_POST['hargasewa'];
-            $jenis_kendaraan = $_POST['jeniskendaraan'];
-            $jumlah_roda = $_POST['jumlahroda'];
-            $gambar = upload_file();
-            
-
-            $query = "INSERT INTO `data_unit` (`id_unit`, `nama`, `gambar`, `jeniskendaraan`, `jumlahroda`, `hargasewa`) VALUES 
-            ('$id', '$nama_kendaraan', '$gambar', '$jenis_kendaraan', '$jumlah_roda', '$harga_sewa')";
-            $result = mysqli_query($koneksi, $query);
-            header('location:datakendaraan.php');
-        
-    }
 ?>
 
 <!DOCTYPE html>
@@ -217,35 +151,55 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     
-                    <p class="h1" style="text-align: Center;">Tambahkan Kendaraan</p>
+                    <p class="h1" style="text-align: Center;">Ubah Data Kendaraan</p>
 
                   <!-- Begin Page Content -->
                   <div class="mb-3 row" >
-                        <form action="tambahkendaraan.php" method="POST" enctype="multipart/form-data">
+                  <?php
+                        include 'koneksi.php';
+                        if(isset($_GET['nama'])){
+
+                            $nama = $_GET['nama'];}
+	                    $data = mysqli_query($koneksi,"SELECT * FROM data_unit WHERE nama='$nama'");
+	                    while($row = mysqli_fetch_array($data)){
+		                ?>
+                        <form action="gantigambar.php" method="POST" enctype="multipart/form-data">
                                 <div class="form-group">
                                 <label for="namaUnit">Nama Unit</label>
-                                <input type="namaUnit" class="form-control" id="nama" name="nama"  placeholder="Masukkan nama unit kendaraan">
+                                <input type="namaUnit" class="form-control" id="nama" name="nama"  placeholder="Masukkan nama unit kendaraan" value="<?php echo $row['nama']; ?>" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label for="Gambar">Gambar</label>
-                                    <input type="file" class="form-control-file" id="gambar" name="gambar">
-                                </div>
+								<label>Foto</label><br>
+								<img src="assets/img/<?php echo $row['gambar'] ?>" width="150px" height="120px" /></br>
+								<input type="checkbox" name="ubah_foto" value="true"> Ceklis jika ingin mengubah foto<br>
+								<input name="gambar" id="gambar" type="file" class="form-control">
+
                                 <div class="form-group">
                                     <label for="jenisKendaraan">Jenis Kendaraan</label>
-                                    <input type="jenisKendaraa" class="form-control" id="jeniskendaraan" name="jeniskendaraan" placeholder="Masukkan jenis kendaraan">
+                                    <input type="jenisKendaraa" class="form-control" id="jeniskendaraan" name="jeniskendaraan" placeholder="Masukkan jenis kendaraan" value="<?php echo $row['jeniskendaraan']; ?>">
                                 </div>
                                 <div class="form-group">
                                 <label for="jumlahRoda">Jumlah Roda</label>
-                                <input type="jumlahRoda" class="form-control" id="jumlahroda" name="jumlahroda" placeholder="Masukkan jumlah roda kendaraan">
+                                <input type="jumlahRoda" class="form-control" id="umlahroda" name="jumlahroda" placeholder="Masukkan jumlah roda kendaraan" value="<?php echo $row['jumlahroda']; ?>">
                                 </div>
                                 <div class="form-group">
-                                <label for="platNomor">Harga Sewa</label>
-                                <input type="platNomor" class="form-control" id="hargasewa" name="hargasewa" placeholder="Masukkan plat nomor kendaraan">
+                                <label for="hargaSewa">Harga Sewa</label>
+                                <input type="hargaSewa" class="form-control" id="hargasewa" name="hargasewa" placeholder="Masukkan plat nomor kendaraan" value="<?php echo $row['hargasewa']; ?>">
                                 </div>
-                                <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-                                <a href="datakendaraan.php"><button type="button" class="btn btn-secondary">Kembali</button></a>
+                                
+                                <div class="mb-3"> 
+                                    <div  class="btn btn-success">
+                                        <button class="btn btn-success" type="submit" name="update" >
+                                            Ubah
+                                        </button>
+                                    </div>
                             </form>
+                            <?php
+                                }
+                                ?>
                   </div>
+                  
+                  <a href="datakendaraan.php"><button type="button" class="btn btn-secondary">Kembali</button></a>
                     
                 </div>
                 <!-- /.container-fluid -->

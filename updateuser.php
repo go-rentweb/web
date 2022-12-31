@@ -1,74 +1,18 @@
-<?php 
+<?php
+include 'koneksi.php';
+if (isset($_POST["update"])) {
 
-
-	include "koneksi.php";
-
-    $id = "SELECT id_unit FROM data_unit ORDER BY id_unit DESC LIMIT 1";
-        $query = mysqli_query($koneksi, $id);
-        $row = mysqli_fetch_assoc($query);
-        if ($id == null) {
-            $id = 1;
-        } else {
-            $id = $row['id_unit'] + 1;
-        }
-
-    function upload_file()
-        {
-            $namaFile   = $_FILES['gambar']['name'];
-            $ukuranFile = $_FILES['gambar']['size'];
-            $error      = $_FILES['gambar']['error'];
-            $tmpName    = $_FILES['gambar']['tmp_name'];
-
-            // check file yang diupload
-            $extensifileValid = ['jpg', 'jpeg', 'png','jfif'];
-            $extensifile      = explode('.', $namaFile);
-            $extensifile      = strtolower(end($extensifile));
-
-            // check format/extensi file
-            if (!in_array($extensifile, $extensifileValid)) {
-                // pesan gagal
-                echo "<script>
-                        alert('Format File Tidak Valid');
-                        document.location.href = 'tambahkendaraan.php';
-                    </script>";
-                die();
-            }
-
-            // check ukuran file 2 MB
-            if ($ukuranFile > 2048000) {
-                // pesan gagal
-                echo "<script>
-                        alert('Ukuran File Max 2 MB');
-                        document.location.href = 'tambah.php';
-                    </script>";
-                die();
-            }
-
-            // generate nama file baru
-            $namaFileBaru = uniqid();
-            $namaFileBaru .= '.';
-            $namaFileBaru .= $extensifile;
-
-            // pindahkan ke folder local
-            move_uploaded_file($tmpName, 'assets/img/' . $namaFileBaru);
-            return $namaFileBaru;
-        }
-    if (isset($_POST['submit'])) {
-        
-
-            $nama_kendaraan = $_POST['nama'];
-            $harga_sewa = $_POST['hargasewa'];
-            $jenis_kendaraan = $_POST['jeniskendaraan'];
-            $jumlah_roda = $_POST['jumlahroda'];
-            $gambar = upload_file();
-            
-
-            $query = "INSERT INTO `data_unit` (`id_unit`, `nama`, `gambar`, `jeniskendaraan`, `jumlahroda`, `hargasewa`) VALUES 
-            ('$id', '$nama_kendaraan', '$gambar', '$jenis_kendaraan', '$jumlah_roda', '$harga_sewa')";
-            $result = mysqli_query($koneksi, $query);
-            header('location:datakendaraan.php');
-        
-    }
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $no_hp = $_POST['no_hp'];
+    $email = $_POST['email'];
+    $alamat = $_POST['alamat'];
+ 
+// update data ke database
+mysqli_query($koneksi, "UPDATE `user` SET `username` = '$username', `password` = '$password', `no_hp` = '$no_hp', `email` = '$email', `alamat` = '$alamat'
+WHERE username='$username';");
+header("location:datauser.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -124,7 +68,6 @@
             </li>
 
             
-            
             <!-- Nav Item - Tables -->
             
             <li class="nav-item">
@@ -132,7 +75,6 @@
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></a>
             </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -190,7 +132,6 @@
                             </div>
                         </li>
 
-                       
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -216,45 +157,80 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    
-                    <p class="h1" style="text-align: Center;">Tambahkan Kendaraan</p>
 
-                  <!-- Begin Page Content -->
-                  <div class="mb-3 row" >
-                        <form action="tambahkendaraan.php" method="POST" enctype="multipart/form-data">
-                                <div class="form-group">
-                                <label for="namaUnit">Nama Unit</label>
-                                <input type="namaUnit" class="form-control" id="nama" name="nama"  placeholder="Masukkan nama unit kendaraan">
-                                </div>
-                                <div class="form-group">
-                                    <label for="Gambar">Gambar</label>
-                                    <input type="file" class="form-control-file" id="gambar" name="gambar">
-                                </div>
-                                <div class="form-group">
-                                    <label for="jenisKendaraan">Jenis Kendaraan</label>
-                                    <input type="jenisKendaraa" class="form-control" id="jeniskendaraan" name="jeniskendaraan" placeholder="Masukkan jenis kendaraan">
-                                </div>
-                                <div class="form-group">
-                                <label for="jumlahRoda">Jumlah Roda</label>
-                                <input type="jumlahRoda" class="form-control" id="jumlahroda" name="jumlahroda" placeholder="Masukkan jumlah roda kendaraan">
-                                </div>
-                                <div class="form-group">
-                                <label for="platNomor">Harga Sewa</label>
-                                <input type="platNomor" class="form-control" id="hargasewa" name="hargasewa" placeholder="Masukkan plat nomor kendaraan">
-                                </div>
-                                <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-                                <a href="datakendaraan.php"><button type="button" class="btn btn-secondary">Kembali</button></a>
-                            </form>
-                  </div>
-                    
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Data Akun</h1>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Ubah Data Akun</h6>
+                        </div>
+                        
+                        <?php
+                        include 'koneksi.php';
+					    $username = $_GET['username'];
+	                    $data = mysqli_query($koneksi,"SELECT * FROM user WHERE username='$username'");
+	                    while($row = mysqli_fetch_array($data)){
+		                ?>
+                        <div>
+                                <form class="login100-form validate-form" action="updateuser.php" method="post">
+                                    <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" aria-describedby="username" name="username" value="<?php echo $row['username']; ?>" readonly>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="text" class="form-control" id="password" aria-describedby="password" name="password" value="<?php echo $row['password']; ?>">
+                                    
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" aria-describedby="email" name="email" value="<?php echo $row['email']; ?>">
+                                    
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="no_hp" class="form-label">No Handphone</label>
+                                    <input type="number" class="form-control" id="no_hp" aria-describedby="no_hp" name="no_hp" value="<?php echo $row['no_hp']; ?>">
+                                    
+                                    <div class="mb-3">
+                                    <div class="mb-3">
+                                    <label for="alamat" class="form-label">Alamat</label>
+                                    <input type="text" class="form-control" id="alamat" aria-describedby="alamat" name="alamat" value="<?php echo $row['alamat']; ?>">
+                                    
+                                    <div class="mb-3">
+                                    <div  class="btn btn-success">
+                                        <button class="btn btn-success" type="submit" name="update" >
+                                            Ubah
+                                        </button>
+                                    </div>
+                                    
+                                </form>
+                                <?php
+                                    }
+                            
+
+                                ?>
+                        </div>
+                           
+                    </div>
+                    <a href="datauser.php"><button type="button" class="btn btn-secondary">Kembali</button></a>
+
                 </div>
                 <!-- /.container-fluid -->
-               
             </div>
             <!-- End of Main Content -->
-
-          
-      
+           
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->

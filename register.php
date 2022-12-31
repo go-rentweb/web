@@ -1,5 +1,14 @@
 <?php 
 	require ('koneksi.php');
+
+    $id = "SELECT id_user FROM user ORDER BY id_user DESC LIMIT 1";
+        $query = mysqli_query($koneksi, $id);
+        $row = mysqli_fetch_assoc($query);
+        if ($id == null) {  
+            $id = 1;
+        } else {
+            $id = $row['id_user'] + 1;
+        }
 	if (isset($_POST['submit'])) {
 		$username = $_POST['txt_username'];
 		$password = $_POST['txt_password'];
@@ -7,10 +16,17 @@
         $email = $_POST['txt_email'];
         $alamat = $_POST['txt_alamat'];
 
-		$query = "INSERT INTO user (`id_user`, `username`, `password`, `no_hp`, `email`, `alamat`, `role`) VALUES ('', '$username', '$password', '$no_hp', '$email', '$alamat', 'admin')";
+		$query = "INSERT INTO user (`id_user`, `username`, `password`, `no_hp`, `email`, `alamat`, `role`) VALUES ('$id', '$username', '$password', '$no_hp', '$email', '$alamat', 'User')";
 		$result = mysqli_query($koneksi, $query);
-		header('location:login.php');
-	}
+		header('location:datauser.php');
+        echo '<script type="text/javascript">
+        alert("Berhasil Disimpan");
+      </script>'; 
+      
+             
+	}else{
+        
+    }
  ?>
 
 <!DOCTYPE html>
@@ -75,16 +91,9 @@
                                     </div>
                                 </div>
                                 <div class="input-group">
-                                <button name="submit" class="btn">Register</button>
+                                <button name="submit" class="btn-success">Register</button>
                             </div>
                             </form>
-                            
-                            <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div>
-                            <div class="text-center">
-                                <a class="small" href="login.php">Already have an account? Login!</a>
-                            </div>
                         </div>
                     </div>
                 </div>

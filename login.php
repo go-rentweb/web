@@ -3,35 +3,31 @@ require('koneksi.php');
 session_start();
 
 if(isset($_POST['submit'])){
-    $username = $_POST['txt_username'];
-    $password = $_POST['txt_pass'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-    if(!empty(trim($username)) && !empty(trim($password))){
-        $query = "SELECT * FROM user WHERE username='$username'";
+    if(!empty(trim($email)) && !empty(trim($password))){
+        $query = "SELECT * FROM user WHERE email='$email' AND role='Admin'";
         $result = mysqli_query($koneksi,$query);
         $num = mysqli_num_rows($result);
 
         while ($row = mysqli_fetch_array($result)){
-            $id_user = $row['id_user'];
-            $email = $row['user_email'];
-            $password =$row['user_password'];
-            $username = $row['user_username'];
-            $role = $row['role'];
+			$emailVal = $row['email'];
+            $passVal = $row['password'];
+            $level = $row['role'];
         }
 
         if($num != 0){
-            if($userVal==$email && $passVal==$pass){
-                // header('Location: dashboard.php?user_fullname='.urlencode($username));
-                $_SESSION['id_user'] = $id;
-                $_SESSION['name'] = $username;
-                $_SESSION['level'] = $lvl;
-                header('Location:admin/dashboard.php');
+            if($emailVal==$email && $passVal==$password){
+                // header('Location: dashboard.php?user_fullname='.urlencode($email));
+                $_SESSION['email'] = $emailVal;
+                header('Location:dashboard.php');
             }else{
-                $error = 'user atau password salah!!';
+                setcookie("message","Maaf, Email Atau Password Salah",time()+1);
                 header('Location:login.php');
             }
         }else{
-            $error = 'user tidak ditemukan!!';
+            setcookie("message","Hanya Admin yang dapat masuk",time()+1);
             header('Location:login.php');
         }
     }else{
@@ -39,7 +35,6 @@ if(isset($_POST['submit'])){
         echo $error;
     }
 }
- 
 ?>
 
 <!DOCTYPE html>
@@ -85,32 +80,26 @@ if(isset($_POST['submit'])){
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Selamat Datang</h1>
                                     </div>
-                                    <form class="user">
+                                    <?php  if (isset($_COOKIE["message"])) {
+                                    echo $_COOKIE["message"];
+                                    }?>
+                                    <form class="login" action="" method="post">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
-                                                id="user_email" name="user_email" aria-describedby="emailHelp"
+                                                id="email" name="email" aria-describedby="emailHelp"
                                                 placeholder="Masukkan email anda">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="user_password" name="user_password" placeholder="Password">
+                                                id="password" name="password" placeholder="Password">
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
-                                            </div>
+                                        <div class="container-login100-form-btn">
+                                            <button class="btn btn-success" type="submit" name="submit" style="width: 347px">
+                                                LOGIN
+                                            </button>
                                         </div>
-                                        <a  type="submit" id="submit" name="submit" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </a>
-                                        <hr>
+                                        
                                     </form>
-                                    <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="register.php">Buat akun</a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
