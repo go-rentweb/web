@@ -35,7 +35,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php" >
                 <div class="sidebar-brand-icon rotate-n-15">
-                <img src="img/image.png" width="50%" heigth="50%">
+                <img src="img/image1.png" width="50%" heigth="50%">
                 </div>
                 <div class="sidebar-brand-text mx-3">Go-Rent</div>
             </a>
@@ -87,19 +87,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -132,7 +120,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Keluar</span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -141,7 +129,7 @@
                                 aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    Keluar
                                 </a>
                             </div>
                         </li>
@@ -161,6 +149,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Data Akun</h6>
+                            <a href="register.php"><button type="button" class="btn btn-success">Tambah Admin</button></a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -177,24 +166,37 @@
                                             
                                         </tr>
                                         <?php
-                                        include 'koneksi.php';
-                                        $user = mysqli_query($koneksi, "SELECT * from user");
-                                        $no=1;
-                                        foreach ($user as $row){
-                                            echo "<tr>
-                                                <td>".$row['username']."</td>
-                                                <td>".$row['password']."</td>
-                                                <td>".$row['no_hp']."</td>
-                                                <td>".$row['email']."</td>
-                                                <td>".$row['alamat']."</td>
-                                                <td>".$row['role']."</td>
-                                                </tr>";
-                                            $no++;
-                                        }
+                                        require('koneksi.php');
+                                        $query = "SELECT * FROM user ";
+                                        $result = mysqli_query($koneksi,$query);
+                                        while($row = $row = mysqli_fetch_array($result)){
+                                        $username = $row['username'];
+                                        $email = $row['email'];
+                                        $password = $row['password'];
+                                        $nohp = $row['no_hp'];
+                                        $alamat = $row['alamat'];
+                                        $role = $row['role'];
+                                        
                                         ?>
                                     </thead>
                                     <tbody>
-                                        
+                                    <tr>
+                                        <td><?php echo $username; ?></td>
+                                            <td><?php echo $password; ?></td>
+                                            <td><?php echo $nohp; ?></td>
+                                            <td><?php echo $email; ?></td>
+                                            <td><?php echo $alamat; ?></td>
+                                            <td><?php echo $role; ?> </td>
+                                            <td>
+                                                <a href="updateuser.php?username=<?=$row['username']; ?>"><input class="btn btn-success btn-xs"  type="button" value="Edit"></a>
+                                                <a href=" deleteuser.php?username=<?=$row['username']; ?>"><input class="btn btn-danger btn-xs"  type="button" value="Delete"></a>
+                                            </td> 
+                                        </tr>
+                                    </tbody>
+                                    <?php
+                                    
+                                    }
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>

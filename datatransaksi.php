@@ -35,7 +35,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php" >
                 <div class="sidebar-brand-icon rotate-n-15">
-                <img src="img/image.png" width="50%" heigth="50%">
+                <img src="img/image1.png" width="50%" heigth="50%">
                 </div>
                 <div class="sidebar-brand-text mx-3">Go-Rent</div>
             </a>
@@ -86,19 +86,6 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -132,7 +119,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Keluar</span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -141,7 +128,7 @@
                                 aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    Keluar
                                 </a>
                             </div>
                         </li>
@@ -156,7 +143,6 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Data Transaksi</h1>
-                    <a href="tambahtransaksi.php"><button type="button" class="btn btn-success" style="margin-bottom: 10px;">Tambah Transaksi</button></a>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -168,12 +154,58 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Nama Unit</th>
-                                            <th>Plat Nomor</th>
-                                            <th>Jenis Kendaraan</th>
+                                            <th>ID Transaksi</th>
                                             <th>Tanggal</th>
+                                            <th>ID Kendaraan</th>
+                                            <th>Banyak Disewa</th>
+                                            <th>Lama Disewa</th>
+                                            <th>ID User</th>
+                                            <th>ID Bank</th>
+                                            <th>Bukti Pembayaran</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                            <th>Hapus</th>
                                             
                                         </tr>
+                                        <?php
+                                        require('koneksi.php');
+                                        $query = "SELECT * FROM transaksi";
+                                        $result = mysqli_query($koneksi,$query);
+                                        while($row = $row = mysqli_fetch_array($result)){
+                                        $id_transaksi = $row['id_transaksi'];
+                                        $tanggal = $row['tanggal'];
+                                        $id_unit = $row['id_unit'];
+                                        $banyakdisewa = $row['banyakdisewa'];
+                                        $lama_sewa = $row['lama_sewa'];
+                                        $id_user = $row['id_user'];
+                                        $id_bank = $row['id_bank'];
+                                        $bukti_pembayaran = $row['bukti_pembayaran'];
+                                        $total_pembayaran = $row['total_pembayaran'];
+                                        $status = $row['status_pembayaran'];
+
+                                        
+                                        ?><tbody>
+                                        <tr>
+                                            <td><?php echo $id_transaksi; ?></td>
+                                                <td><?php echo $tanggal; ?></td>
+                                                <td><?php echo $id_unit ?></td>
+                                                <td><?php echo $banyakdisewa; ?></td>
+                                                <td><?php echo $lama_sewa, " hari"; ?></td>
+                                                <td><?php echo $id_user; ?></td>
+                                                <td><?php echo $id_bank; ?></td>
+                                                <td><?php echo $bukti_pembayaran ?></td>
+                                                <td><?php echo "Rp. ", $total_pembayaran ?></td>
+                                                <td><?php echo $status; ?></td>
+                                                <td>
+
+                                                    <a href="deletetransaksi.php?id_transaksi=<?=$row['id_transaksi']; ?>"><input class="btn btn-danger btn-xs"  type="button" value="Delete"></a>
+                                                </td> 
+                                            </tr>
+                                        </tbody>
+                                        <?php
+                                        
+                                        }
+                                        ?>
                                     </thead>
                                     <tbody>
                                         

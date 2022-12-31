@@ -1,3 +1,22 @@
+<?php
+include 'koneksi.php';
+// mengambil data user
+$data_user = mysqli_query($koneksi,"SELECT * FROM user WHERE role='User'");
+// mengambil data admin
+$data_admin = mysqli_query($koneksi,"SELECT * FROM user WHERE role='Admin'");
+// mengambil data buku
+$data_unit = mysqli_query($koneksi,"SELECT * FROM data_unit");
+// mengambil data kendaraan yang disewa
+$data_sewa = mysqli_query($koneksi,"SELECT * FROM transaksi WHERE status='dikembalikan'");
+// menghitung data user
+$jumlah_user = mysqli_num_rows($data_user);
+//menghitung data unit
+$jumlah_unit = mysqli_num_rows($data_unit);
+// menghitung data admin
+$jumlah_admin = mysqli_num_rows($data_admin);
+//menghitung data kendaraan yang disewa
+$jumlah_sewa = mysqli_num_rows($data_sewa);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,9 +52,9 @@
         <ul class="navbar-nav bg-gray-900 sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php" >
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php" >
                 <div class="sidebar-brand-icon rotate-n-15">
-                <img src="img/image.png" width="50%" heigth="50%">
+                <img src="img/image1.png" width="50%" heigth="50%">
                 </div>
                 <div class="sidebar-brand-text mx-3">Go-Rent</div>
             </a>
@@ -89,19 +108,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -135,7 +142,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Keluar</span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -144,7 +151,7 @@
                                 aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    Keluar
                                 </a>
                             </div>
                         </li>
@@ -169,9 +176,8 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Earnings (Monthly)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Jumlah Kendaraan</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $jumlah_unit; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -188,8 +194,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Pendapatan Total</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp 30.000.000</div>
+                                            Transaksi Yang Telah Selesai</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $jumlah_sewa; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -206,8 +212,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Kendaraan Yang Sedang di Sewa</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">30</div>
+                                            Jumlah User </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $jumlah_user; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -224,8 +230,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Pending Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                                Jumlah Admin</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $jumlah_admin; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
